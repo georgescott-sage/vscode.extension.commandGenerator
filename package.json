@@ -10,14 +10,14 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:sbc-code-generator.helloWorld"
+		"onCommand:sbc-code-generator.generateCommand"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "sbc-code-generator.helloWorld",
-				"title": "Hello World"
+				"command": "sbc-code-generator.generateCommand",
+				"title": "Generate Command"
 			}
 		]
 	},
