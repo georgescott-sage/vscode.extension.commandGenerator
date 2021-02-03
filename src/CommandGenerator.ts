@@ -35,9 +35,7 @@ export class CommandGenerator { //implements IDisposable {
     });
     return result;
   }
-
-  // takes a string, returns a string if there is an error,
-  // null otherwise
+  
   validate(commandName: string): string | null {
     if (!commandName) {
       return 'Command name is required';
