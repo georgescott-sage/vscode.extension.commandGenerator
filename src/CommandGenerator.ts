@@ -30,11 +30,22 @@ export class CommandGenerator { //implements IDisposable {
       value: 'ExampleCommand',
       valueSelection: [0, 7],
       placeHolder: 'For example: GetUserCommand',
-      validateInput: text => {
-        vscode.window.showInformationMessage(`Validating: ${text}`);
-        return text === '123' ? 'Not 123!' : null;
-      }
+      validateInput: this.validate,
     });
     return result;
+  }
+
+  // takes a string, returns a string if there is an error,
+  // null otherwise
+  validate(commandName: string): string | null {
+    if (!commandName) {
+      return 'Command name is required';
+    }
+    if (commandName.includes(' ')) {
+      return 'Spaces are not permitted';
+    }
+    
+    // no errors
+    return null;
   }
 }
