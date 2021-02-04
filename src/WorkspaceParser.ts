@@ -10,10 +10,7 @@ export class WorkspaceParser {
       return undefined;
     }
     else {
-      var workspace = workspaces[0];
-      var name = workspace.name;
-      var uri = workspace.uri;
-      vscode.window.showInformationMessage(`SBC name: ${name} SBC root: ${uri}`);
+      let workspace = workspaces[0];
       return new Workspace(workspace.name, workspace.uri);
     }
   }
