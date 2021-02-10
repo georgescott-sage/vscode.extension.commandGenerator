@@ -1,12 +1,16 @@
-import { window }  from 'vscode';
+import { window, workspace, WorkspaceEdit }  from 'vscode';
+import * as vscode from 'vscode';
+import * as path from 'path';
 import { WorkspaceParser } from './WorkspaceParser';
+import { Workspace } from './Workspace';
 
 export class CommandGenerator { //implements IDisposable {
+  private readonly extension = '.cs';
   constructor() { }
   async execute(): Promise<void> { 
   	const parser = new WorkspaceParser();
-    let workspace = parser.getProjectWorkspaceDetail();
-		if(!workspace) {
+    let workspaceDetail : Workspace | undefined = await parser.getProjectWorkspaceDetail();
+		if(!workspaceDetail || workspaceDetail == undefined) {
 			window.showInformationMessage(`Please open an SBC workspace at the route folder`);
     }
     
@@ -19,9 +23,13 @@ export class CommandGenerator { //implements IDisposable {
       commandName = commandName.endsWith('Command') ? commandName : commandName += 'Command';
     }
 
-    //TODO: create files from template
-    //TODO: work out where to place the files in the current workspace
-    //TODO: add files to workspace 
+    const filename = `${commandName}${this.extension}`;
+    const commandFolderPath = `/src/${workspaceDetail?.name}.Domain.Core/UseCases`
+    const folderPath = path.join(workspaceDetail?.root.fsPath ?? '/', commandFolderPath);
+    const fullpath = path.join(folderPath, filename);
+    let workspaceEdit = new WorkspaceEdit();
+    workspaceEdit.createFile(vscode.Uri.file(fullpath));
+    vscode.workspace.applyEdit(workspaceEdit);
 
     window.showInformationMessage(`Command: '${commandName}' successfully created`);
   }
@@ -35,7 +43,7 @@ export class CommandGenerator { //implements IDisposable {
     });
     return result;
   }
-  
+
   validate(commandName: string): string | null {
     if (!commandName) {
       return 'Command name is required';
