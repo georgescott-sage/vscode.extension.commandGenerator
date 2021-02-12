@@ -22,9 +22,13 @@ export class CommandGenerator { //implements IDisposable {
     }
     commandName = commandName.endsWith('Command') ? commandName : commandName += 'Command';
 
-    const filePath = this.getPath(commandName, workspaceDetail);
+    const interfaceCommandFolderPath = `/src/${workspace?.name}.Domain.Core/UseCases`
+    const interfaceCommandPath = this.getPath(`I${commandName}`, workspaceDetail, interfaceCommandFolderPath);
+    const commandFolderPath = `/src/${workspace?.name}.Domain.Logic/UseCases`
+    const commandPath = this.getPath(commandName, workspaceDetail, commandFolderPath);
     let workspaceEdit = new WorkspaceEdit();
-    workspaceEdit.createFile(filePath);
+    workspaceEdit.createFile(interfaceCommandPath);
+    workspaceEdit.createFile(commandPath);
     workspace.applyEdit(workspaceEdit);
 
     window.showInformationMessage(`Command: '${commandName}' successfully created`);
@@ -40,9 +44,8 @@ export class CommandGenerator { //implements IDisposable {
     return result;
   }
 
-  getPath(commandName: string, workspace: Workspace | undefined): Uri {
+  getPath(commandName: string, workspace: Workspace | undefined, commandFolderPath: string): Uri {
     const filename = `${commandName}${this.extension}`;
-    const commandFolderPath = `/src/${workspace?.name}.Domain.Core/UseCases`
     const folderPath = path.join(workspace?.root.fsPath ?? '/', commandFolderPath);
     return Uri.file(path.join(folderPath, filename));
   }
@@ -54,7 +57,6 @@ export class CommandGenerator { //implements IDisposable {
     if (commandName.includes(' ')) {
       return 'Spaces are not permitted';
     }
-  
     return null;
   }
 }
