@@ -1,5 +1,4 @@
-import { window, workspace, WorkspaceEdit }  from 'vscode';
-import * as vscode from 'vscode';
+import { window, workspace, WorkspaceEdit, Uri }  from 'vscode';
 import * as path from 'path';
 import { WorkspaceParser } from './WorkspaceParser';
 import { Workspace } from './Workspace';
@@ -26,7 +25,7 @@ export class CommandGenerator { //implements IDisposable {
     const filePath = this.getPath(commandName, workspaceDetail);
     let workspaceEdit = new WorkspaceEdit();
     workspaceEdit.createFile(filePath);
-    vscode.workspace.applyEdit(workspaceEdit);
+    workspace.applyEdit(workspaceEdit);
 
     window.showInformationMessage(`Command: '${commandName}' successfully created`);
   }
@@ -41,11 +40,11 @@ export class CommandGenerator { //implements IDisposable {
     return result;
   }
 
-  getPath(commandName: string, workspace: Workspace | undefined): vscode.Uri {
+  getPath(commandName: string, workspace: Workspace | undefined): Uri {
     const filename = `${commandName}${this.extension}`;
     const commandFolderPath = `/src/${workspace?.name}.Domain.Core/UseCases`
     const folderPath = path.join(workspace?.root.fsPath ?? '/', commandFolderPath);
-    return vscode.Uri.file(path.join(folderPath, filename));
+    return Uri.file(path.join(folderPath, filename));
   }
 
   validate(commandName: string): string | null {
