@@ -8,7 +8,7 @@ export class CommandGenerator { //implements IDisposable {
   constructor() { }
   async execute(): Promise<void> { 
   	const parser = new WorkspaceParser();
-    let workspaceDetail : Workspace | undefined = await parser.getProjectWorkspaceDetail();
+    const workspaceDetail : Workspace | undefined = await parser.getProjectWorkspaceDetail();
 		if(!workspaceDetail || workspaceDetail == undefined) {
 			window.showInformationMessage(`Please open an SBC workspace at the route folder`);
       return;
@@ -26,7 +26,7 @@ export class CommandGenerator { //implements IDisposable {
     const interfaceCommandPath = this.getPath(`I${commandName}`, workspaceDetail, interfaceCommandFolderPath);
     const commandFolderPath = `/src/${workspace?.name}.Domain.Logic/UseCases`
     const commandPath = this.getPath(commandName, workspaceDetail, commandFolderPath);
-    let workspaceEdit = new WorkspaceEdit();
+    const workspaceEdit = new WorkspaceEdit();
     workspaceEdit.createFile(interfaceCommandPath);
     workspaceEdit.createFile(commandPath);
     workspace.applyEdit(workspaceEdit);
