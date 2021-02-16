@@ -1,8 +1,8 @@
-import { window, workspace, WorkspaceEdit, Uri }  from 'vscode';
+import { window, workspace, WorkspaceEdit, Uri, Position }  from 'vscode';
 import * as path from 'path';
 import { WorkspaceParser } from './WorkspaceParser';
 import { Workspace } from './Workspace';
-
+let ejs = require('ejs');
 export class CommandGenerator { //implements IDisposable {
   private readonly extension = '.cs';
   constructor() { }
@@ -22,6 +22,17 @@ export class CommandGenerator { //implements IDisposable {
     }
     commandName = commandName.endsWith('Command') ? commandName : commandName += 'Command';
 
+    const filename = path.join(__dirname, "Templates/CommandTemplate.ejs");
+    let fileContent = commandName;
+    ejs.renderFile(filename, {commandName}, {}, (err: any, str: any) => {
+        // str => Rendered HTML string
+        if (err) {
+          console.error(err);
+        }
+
+        fileContent = str;
+      })
+    // let content = ejs.render('public interface I<%= commandName %> : ICustomCommand<<%= commandName %>Request, <%= commandName %>Response> {', {commandName});
     const interfaceCommandFolderPath = `/src/${workspace?.name}.Domain.Core/UseCases`
     const interfaceCommandPath = this.getPath(`I${commandName}`, workspaceDetail, interfaceCommandFolderPath);
     const commandFolderPath = `/src/${workspace?.name}.Domain.Logic/UseCases`
@@ -29,6 +40,7 @@ export class CommandGenerator { //implements IDisposable {
     const workspaceEdit = new WorkspaceEdit();
     workspaceEdit.createFile(interfaceCommandPath);
     workspaceEdit.createFile(commandPath);
+    workspaceEdit.insert(interfaceCommandPath, new Position(0,0), fileContent)
     workspace.applyEdit(workspaceEdit);
 
     window.showInformationMessage(`Command: '${commandName}' successfully created`);
