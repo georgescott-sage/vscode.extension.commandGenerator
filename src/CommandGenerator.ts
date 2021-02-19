@@ -22,17 +22,15 @@ export class CommandGenerator { //implements IDisposable {
     }
     commandName = commandName.endsWith('Command') ? commandName : commandName += 'Command';
 
-    const filename = path.join(__dirname, "Templates/CommandTemplate.ejs");
+    const filename = path.join(__dirname, "Templates/ICommandTemplate.ejs");
     let fileContent = commandName;
     ejs.renderFile(filename, {commandName}, {}, (err: any, str: any) => {
-        // str => Rendered HTML string
         if (err) {
           console.error(err);
         }
 
         fileContent = str;
       })
-    // let content = ejs.render('public interface I<%= commandName %> : ICustomCommand<<%= commandName %>Request, <%= commandName %>Response> {', {commandName});
     const interfaceCommandFolderPath = `/src/${workspace?.name}.Domain.Core/UseCases`
     const interfaceCommandPath = this.getPath(`I${commandName}`, workspaceDetail, interfaceCommandFolderPath);
     const commandFolderPath = `/src/${workspace?.name}.Domain.Logic/UseCases`
