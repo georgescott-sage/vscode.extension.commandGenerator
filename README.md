@@ -1,6 +1,6 @@
 # sbc-code-generator README
 
-This is the README for your extension "sbc-code-generator". After writing up a brief description, we recommend including the following sections.
+Sample project to test the suitability of a vscode extension to template out common files eg commands/queries
 
 ## Features
 
