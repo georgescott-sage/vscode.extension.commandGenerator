@@ -1,0 +1,45 @@
+namespace SBC.Connected.Drive.Service.Domain.Logic.UseCases.Health.Commands.UpdateBusinessHealth 
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Threading.Tasks;
+    using SBC.Caching;
+    using SBC.Connected.Drive.Service.Domain.Core.UseCases.Health.Commands.UpdateBusinessHealth;
+
+    /// <summary>
+    /// Interface defining the command to update the health state for a business
+    /// </summary>
+    public class <%= commandName %> : I<%= commandName %> 
+    {
+        public <%= commandName %>()
+        {
+        }
+
+        public TimeSpan TimeoutAfter => throw new NotImplementedException();
+
+        public TimeSpan LockTTL() {
+            return TimeSpan.FromSeconds(5);
+        }
+
+        public List<ICacheDependency> CacheDependencies(<%= commandName %>Request request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<<%= commandName %>Response> ExecuteAsync(IDbTransaction transaction, <%= commandName %>Request request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TimeSpan LockTTL()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Owner(<%= commandName %>Request request)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
