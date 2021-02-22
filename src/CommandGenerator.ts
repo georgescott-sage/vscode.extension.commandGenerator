@@ -24,7 +24,7 @@ export class CommandGenerator { //implements IDisposable {
 
     const filename = path.join(__dirname, "Templates/ICommandTemplate.ejs");
     let fileContent = commandName;
-    ejs.renderFile(filename, {commandName}, {}, (err: any, str: any) => {
+    ejs.renderFile(filename, {commandName: commandName}, {}, (err: any, str: any) => {
         if (err) {
           console.error(err);
         }
