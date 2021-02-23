@@ -23,7 +23,7 @@ export class CommandGenerator { //implements IDisposable {
     }
     commandName = commandName.endsWith('Command') ? commandName : commandName += 'Command';
 
-    this.createFiles(commandName, workspaceDetail);
+    await this.createFiles(commandName, workspaceDetail);
     window.showInformationMessage(`Command: '${commandName}' successfully created`);
   }
 
@@ -37,30 +37,33 @@ export class CommandGenerator { //implements IDisposable {
     return result;
   }
 
-  createFiles(commandName: string, workspaceDetail : Workspace) {
-    const filename = path.join(__dirname, "Templates/ICommandTemplate.ejs");
-    const templateParams = { commandName: commandName };
-    const fileContent = this.getFileContent(filename, templateParams);
-    
-    const interfaceCommandFolderPath = `/src/${workspace?.name}.Domain.Core/UseCases`
-    const interfaceCommandPath = this.getPath(`I${commandName}`, workspaceDetail, interfaceCommandFolderPath);
-    const commandFolderPath = `/src/${workspace?.name}.Domain.Logic/UseCases`
-    const commandPath = this.getPath(commandName, workspaceDetail, commandFolderPath);
+  async createFiles(commandName: string, workspaceDetail : Workspace) {
     const workspaceEdit = new WorkspaceEdit();
-    workspaceEdit.createFile(interfaceCommandPath);
-    workspaceEdit.createFile(commandPath);
-    workspaceEdit.insert(interfaceCommandPath, new Position(0,0), fileContent)
-    workspace.applyEdit(workspaceEdit);
-  }
-  
-  getFileContent(filename: string, params: object): string  {
-    ejs.renderFile(filename, params, {}, (err: any, str: any) => {
-      if (err) {
-        console.error(err);
+    var templates = [
+      {
+        template: "Templates/ICommandTemplate.ejs",
+        commandName: `I${commandName}`,
+        commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
       }
-      return str;
-    });
-    return '';
+    ]
+
+    for (var templateParams of templates) {
+      const filename = path.join(__dirname, templateParams.template);
+      let fileContent = "";
+
+      ejs.renderFile(filename, templateParams, {}, (err: any, str: any) => {
+        if (err) {
+          console.error(err);
+        }
+        fileContent = str;
+      });
+      const interfaceCommandFolderPath = templateParams.commandFolder;
+      const commandPath = this.getPath(templateParams.commandName, workspaceDetail, interfaceCommandFolderPath);
+      workspaceEdit.createFile(commandPath);
+      workspaceEdit.insert(commandPath, new Position(0,0), fileContent);
+    }
+
+    workspace.applyEdit(workspaceEdit);
   }
 
   getPath(commandName: string, workspace: Workspace | undefined, commandFolderPath: string): Uri {
