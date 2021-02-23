@@ -3,6 +3,7 @@ import * as path from 'path';
 import { WorkspaceParser } from './WorkspaceParser';
 import { Workspace } from './Workspace';
 let ejs = require('ejs');
+
 export class CommandGenerator { //implements IDisposable {
   private readonly extension = '.cs';
   constructor() { }
@@ -22,25 +23,7 @@ export class CommandGenerator { //implements IDisposable {
     }
     commandName = commandName.endsWith('Command') ? commandName : commandName += 'Command';
 
-    const filename = path.join(__dirname, "Templates/ICommandTemplate.ejs");
-    let fileContent = commandName;
-    ejs.renderFile(filename, {commandName: commandName}, {}, (err: any, str: any) => {
-        if (err) {
-          console.error(err);
-        }
-
-        fileContent = str;
-      })
-    const interfaceCommandFolderPath = `/src/${workspace?.name}.Domain.Core/UseCases`
-    const interfaceCommandPath = this.getPath(`I${commandName}`, workspaceDetail, interfaceCommandFolderPath);
-    const commandFolderPath = `/src/${workspace?.name}.Domain.Logic/UseCases`
-    const commandPath = this.getPath(commandName, workspaceDetail, commandFolderPath);
-    const workspaceEdit = new WorkspaceEdit();
-    workspaceEdit.createFile(interfaceCommandPath);
-    workspaceEdit.createFile(commandPath);
-    workspaceEdit.insert(interfaceCommandPath, new Position(0,0), fileContent)
-    workspace.applyEdit(workspaceEdit);
-
+    this.createFiles(commandName, workspaceDetail);
     window.showInformationMessage(`Command: '${commandName}' successfully created`);
   }
 
@@ -52,6 +35,32 @@ export class CommandGenerator { //implements IDisposable {
       validateInput: this.validate,
     });
     return result;
+  }
+
+  createFiles(commandName: string, workspaceDetail : Workspace) {
+    const filename = path.join(__dirname, "Templates/ICommandTemplate.ejs");
+    const templateParams = { commandName: commandName };
+    const fileContent = this.getFileContent(filename, templateParams);
+    
+    const interfaceCommandFolderPath = `/src/${workspace?.name}.Domain.Core/UseCases`
+    const interfaceCommandPath = this.getPath(`I${commandName}`, workspaceDetail, interfaceCommandFolderPath);
+    const commandFolderPath = `/src/${workspace?.name}.Domain.Logic/UseCases`
+    const commandPath = this.getPath(commandName, workspaceDetail, commandFolderPath);
+    const workspaceEdit = new WorkspaceEdit();
+    workspaceEdit.createFile(interfaceCommandPath);
+    workspaceEdit.createFile(commandPath);
+    workspaceEdit.insert(interfaceCommandPath, new Position(0,0), fileContent)
+    workspace.applyEdit(workspaceEdit);
+  }
+  
+  getFileContent(filename: string, params: object): string  {
+    ejs.renderFile(filename, params, {}, (err: any, str: any) => {
+      if (err) {
+        console.error(err);
+      }
+      return str;
+    });
+    return '';
   }
 
   getPath(commandName: string, workspace: Workspace | undefined, commandFolderPath: string): Uri {
