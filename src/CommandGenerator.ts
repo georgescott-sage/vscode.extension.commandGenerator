@@ -1,12 +1,14 @@
-import { window, workspace, WorkspaceEdit, Uri, Position }  from 'vscode';
-import * as path from 'path';
+import { window }  from 'vscode';
 import { WorkspaceParser } from './WorkspaceParser';
 import { Workspace } from './Workspace';
-let ejs = require('ejs');
-
+import { FileCreator } from './FileCreator';
 export class CommandGenerator { //implements IDisposable {
-  private readonly extension = '.cs';
-  constructor() { }
+  private readonly fileCreator: FileCreator;
+
+  constructor() { 
+    this.fileCreator = new FileCreator();
+  }
+
   async execute(): Promise<void> { 
   	const parser = new WorkspaceParser();
     const workspaceDetail : Workspace | undefined = await parser.getProjectWorkspaceDetail();
@@ -23,7 +25,7 @@ export class CommandGenerator { //implements IDisposable {
     }
     commandName = commandName.endsWith('Command') ? commandName : commandName += 'Command';
 
-    await this.createFiles(commandName, workspaceDetail);
+    await this.fileCreator.createFiles(commandName, workspaceDetail);
     window.showInformationMessage(`Command: '${commandName}' successfully created`);
   }
 
@@ -35,41 +37,6 @@ export class CommandGenerator { //implements IDisposable {
       validateInput: this.validate,
     });
     return result;
-  }
-
-  async createFiles(commandName: string, workspaceDetail : Workspace) {
-    const workspaceEdit = new WorkspaceEdit();
-    var templates = [
-      {
-        template: "Templates/ICommandTemplate.ejs",
-        commandName: `I${commandName}`,
-        commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
-      }
-    ]
-
-    for (var templateParams of templates) {
-      const filename = path.join(__dirname, templateParams.template);
-      let fileContent = "";
-
-      ejs.renderFile(filename, templateParams, {}, (err: any, str: any) => {
-        if (err) {
-          console.error(err);
-        }
-        fileContent = str;
-      });
-      const interfaceCommandFolderPath = templateParams.commandFolder;
-      const commandPath = this.getPath(templateParams.commandName, workspaceDetail, interfaceCommandFolderPath);
-      workspaceEdit.createFile(commandPath);
-      workspaceEdit.insert(commandPath, new Position(0,0), fileContent);
-    }
-
-    workspace.applyEdit(workspaceEdit);
-  }
-
-  getPath(commandName: string, workspace: Workspace | undefined, commandFolderPath: string): Uri {
-    const filename = `${commandName}${this.extension}`;
-    const folderPath = path.join(workspace?.root.fsPath ?? '/', commandFolderPath);
-    return Uri.file(path.join(folderPath, filename));
   }
 
   validate(commandName: string): string | null {
