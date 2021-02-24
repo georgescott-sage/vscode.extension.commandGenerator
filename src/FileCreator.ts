@@ -14,6 +14,11 @@ export class FileCreator {
         template: "Templates/ICommandTemplate.ejs",
         commandName: `I${commandName}`,
         commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
+      },
+      {
+        template: "Templates/CommandTemplate.ejs",
+        commandName: `${commandName}`,
+        commandFolder: `/src/${workspace?.name}.Domain.Logic/UseCases`
       }
     ];
 
