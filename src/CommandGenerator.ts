@@ -33,7 +33,7 @@ export class CommandGenerator { //implements IDisposable {
 
     let commandName =  `${actionName}${resourceName}Command`;
 
-    await this.fileCreator.createFiles(commandName, workspaceDetail);
+    await this.fileCreator.createFiles(workspaceDetail, commandName, actionName, resourceName);
     window.showInformationMessage(`Command: '${commandName}' successfully created`);
   }
 

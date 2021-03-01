@@ -7,17 +7,21 @@ export class FileCreator {
   constructor() { }
   private readonly extension = '.cs';
 
-  async createFiles(commandName: string, workspaceDetail: Workspace) {
+  async createFiles(workspaceDetail: Workspace, commandName: string, action: string, resource: string) {
     const workspaceEdit = new WorkspaceEdit();
     var templates = [
       {
         template: "Templates/ICommandTemplate.ejs",
         commandName: `I${commandName}`,
+        resource: `${resource}`,
+        action: `${action}`,
         commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
       },
       {
         template: "Templates/CommandTemplate.ejs",
         commandName: `${commandName}`,
+        resource: `${resource}`,
+        action: `${action}`,
         commandFolder: `/src/${workspace?.name}.Domain.Logic/UseCases`
       }
     ];
