@@ -23,6 +23,20 @@ export class FileCreator {
         resource: `${resource}`,
         action: `${action}`,
         commandFolder: `/src/${workspace?.name}.Domain.Logic/UseCases`
+      },
+      {
+        template: "Templates/CommandRequestTemplate.ejs",
+        commandName: `${commandName}Request`,
+        resource: `${resource}`,
+        action: `${action}`,
+        commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
+      },
+      {
+        template: "Templates/CommandResponseTemplate.ejs",
+        commandName: `${commandName}Response`,
+        resource: `${resource}`,
+        action: `${action}`,
+        commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
       }
     ];
 
