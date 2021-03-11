@@ -17,18 +17,16 @@ export class CommandGenerator { //implements IDisposable {
       return;
     }
 
-    let resourceName : string | undefined = await this.showResourceInputBox();
+    let resourceName : string | undefined;
     
-    if (!resourceName) {
-      window.showInformationMessage(`Please enter the name of the resource the command will act on`);
-      return;
+    while(!resourceName) {
+      resourceName = await this.showResourceInputBox('Please enter the name of the resource the command will act on');
     }
+        
+    let actionName : string | undefined;
     
-    let actionName : string | undefined = await this.showInputBox();
-
-    if (!actionName) {
-      window.showInformationMessage(`Please enter a name for the action the command will perform on the resource`);
-      return;
+    while(!actionName) {
+      actionName = await this.showInputBox('Please enter a name for the action the command will perform on the resource');
     }
 
     let commandName =  `${actionName}${resourceName}Command`;
@@ -37,22 +35,24 @@ export class CommandGenerator { //implements IDisposable {
     window.showInformationMessage(`Command: '${commandName}' successfully created`);
   }
 
-  async showResourceInputBox(): Promise<string | undefined> {
+  async showResourceInputBox(prompt: string): Promise<string | undefined> {
     const result = await window.showInputBox({
       value: 'User',
       valueSelection: [0, 7],
       placeHolder: 'For example: User',
       validateInput: this.validate,
+      prompt: prompt
     });
     return result;
   }
 
-  async showInputBox(): Promise<string | undefined> {
+  async showInputBox(prompt: string): Promise<string | undefined> {
     const result = await window.showInputBox({
       value: 'Create',
       valueSelection: [0, 7],
       placeHolder: 'For example: Create',
       validateInput: this.validate,
+      prompt: prompt
     });
     return result;
   }
