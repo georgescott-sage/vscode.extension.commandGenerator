@@ -1,6 +1,8 @@
 import { workspace, WorkspaceEdit, Uri, Position } from 'vscode';
 import * as path from 'path';
 import { Workspace } from './Workspace';
+import {ICommandTemplate} from './Templates/ICommandTemplate.ejs';
+
 const ejs = require('ejs');
 
 export class FileCreator {
@@ -11,29 +13,8 @@ export class FileCreator {
     const workspaceEdit = new WorkspaceEdit();
     var templates = [
       {
-        template: "Templates/ICommandTemplate.ejs",
+        template: ICommandTemplate,
         commandName: `I${commandName}`,
-        resource: `${resource}`,
-        action: `${action}`,
-        commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
-      },
-      {
-        template: "Templates/CommandTemplate.ejs",
-        commandName: `${commandName}`,
-        resource: `${resource}`,
-        action: `${action}`,
-        commandFolder: `/src/${workspace?.name}.Domain.Logic/UseCases`
-      },
-      {
-        template: "Templates/CommandRequestTemplate.ejs",
-        commandName: `${commandName}Request`,
-        resource: `${resource}`,
-        action: `${action}`,
-        commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
-      },
-      {
-        template: "Templates/CommandResponseTemplate.ejs",
-        commandName: `${commandName}Response`,
         resource: `${resource}`,
         action: `${action}`,
         commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
@@ -42,14 +23,7 @@ export class FileCreator {
 
     for (var templateParams of templates) {
       const filename = path.join(__dirname, templateParams.template);
-      let fileContent = "";
-
-      ejs.renderFile(filename, templateParams, {}, (err: any, str: any) => {
-        if (err) {
-          console.error(err);
-        }
-        fileContent = str;
-      });
+      let fileContent = ejs.render(templateParams.template, templateParams);
       const commandPath = this.getPath(templateParams.commandName, workspaceDetail, templateParams.commandFolder);
       workspaceEdit.createFile(commandPath);
       workspaceEdit.insert(commandPath, new Position(0, 0), fileContent);

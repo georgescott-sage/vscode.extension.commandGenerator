@@ -23,7 +23,6 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"postbuild": "copyfiles -u 1 src/**/*.ejs out/",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",

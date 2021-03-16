@@ -1,4 +1,5 @@
-namespace SBC.Connected.Drive.Service.Domain.Core.UseCases.<%= resource %>.Commands.<%= action %><%= resource %> {
+export const ICommandTemplate: string=
+`namespace SBC.Connected.Drive.Service.Domain.Core.UseCases.<%= resource %>.Commands.<%= action %><%= resource %> {
     using SBC.Domain.Commands;
 
     /// <summary>
@@ -6,4 +7,4 @@ namespace SBC.Connected.Drive.Service.Domain.Core.UseCases.<%= resource %>.Comma
     /// </summary>
     public interface I<%= commandName %> : ICustomCommand<<%= commandName %>Request, <%= commandName %>Response> {
     }
-}
+}`;
