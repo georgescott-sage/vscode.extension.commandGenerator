@@ -2,6 +2,9 @@ import { workspace, WorkspaceEdit, Uri, Position } from 'vscode';
 import * as path from 'path';
 import { Workspace } from './Workspace';
 import {ICommandTemplate} from './Templates/ICommandTemplate.ejs';
+import {CommandTemplate} from './Templates/CommandTemplate.ejs';
+import {CommandResponseTemplate} from './Templates/CommandResponseTemplate.ejs';
+import {CommandRequestTemplate} from './Templates/CommandRequestTemplate.ejs';
 
 const ejs = require('ejs');
 
@@ -15,6 +18,27 @@ export class FileCreator {
       {
         template: ICommandTemplate,
         commandName: `I${commandName}`,
+        resource: `${resource}`,
+        action: `${action}`,
+        commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
+      },
+      {
+        template: CommandTemplate,
+        commandName: `${commandName}`,
+        resource: `${resource}`,
+        action: `${action}`,
+        commandFolder: `/src/${workspace?.name}.Domain.Logic/UseCases`
+      },
+      {
+        template: CommandRequestTemplate,
+        commandName: `${commandName}Request`,
+        resource: `${resource}`,
+        action: `${action}`,
+        commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
+      },
+      {
+        template: CommandResponseTemplate,
+        commandName: `${commandName}Response`,
         resource: `${resource}`,
         action: `${action}`,
         commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`

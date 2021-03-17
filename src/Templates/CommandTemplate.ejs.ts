@@ -1,4 +1,5 @@
-namespace SBC.Connected.Drive.Service.Domain.Logic.UseCases.<%= resource %>.Commands.<%= action %><%= resource %> {
+export const CommandTemplate: string=
+`namespace SBC.Connected.Drive.Service.Domain.Logic.UseCases.<%= resource %>.Commands.<%= action %><%= resource %> {
 {
     using System;
     using System.Collections.Generic;
@@ -42,4 +43,4 @@ namespace SBC.Connected.Drive.Service.Domain.Logic.UseCases.<%= resource %>.Comm
             throw new NotImplementedException();
         }
     }
-}
+}`;
