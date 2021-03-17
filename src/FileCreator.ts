@@ -17,7 +17,7 @@ export class FileCreator {
     var templates = [
       {
         template: ICommandTemplate,
-        commandName: `I${commandName}`,
+        commandName: `${commandName}`,
         resource: `${resource}`,
         action: `${action}`,
         commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
