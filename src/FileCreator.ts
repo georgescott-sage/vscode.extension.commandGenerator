@@ -14,41 +14,16 @@ export class FileCreator {
 
   async createFiles(workspaceDetail: Workspace, commandName: string, action: string, resource: string) {
     const workspaceEdit = new WorkspaceEdit();
-    var templates = [
-      {
-        template: ICommandTemplate,
-        commandName: `${commandName}`,
-        resource: `${resource}`,
-        action: `${action}`,
-        commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
-      },
-      {
-        template: CommandTemplate,
-        commandName: `${commandName}`,
-        resource: `${resource}`,
-        action: `${action}`,
-        commandFolder: `/src/${workspace?.name}.Domain.Logic/UseCases`
-      },
-      {
-        template: CommandRequestTemplate,
-        commandName: `${commandName}Request`,
-        resource: `${resource}`,
-        action: `${action}`,
-        commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
-      },
-      {
-        template: CommandResponseTemplate,
-        commandName: `${commandName}Response`,
-        resource: `${resource}`,
-        action: `${action}`,
-        commandFolder: `/src/${workspace?.name}.Domain.Core/UseCases`
-      }
-    ];
+    var params = {
+      commandName: commandName,
+      resource: resource,
+      action: action
+    }
+    var templates = [ ICommandTemplate ];
 
-    for (var templateParams of templates) {
-      const filename = path.join(__dirname, templateParams.template);
-      let fileContent = ejs.render(templateParams.template, templateParams);
-      const commandPath = this.getPath(templateParams.commandName, workspaceDetail, templateParams.commandFolder);
+    for (var template of templates) {
+      let fileContent = ejs.render(template.template, params);
+      const commandPath = this.getPath(template.getName(params.commandName), workspaceDetail, template.getFolder(workspace.name));
       workspaceEdit.createFile(commandPath);
       workspaceEdit.insert(commandPath, new Position(0, 0), fileContent);
     }
