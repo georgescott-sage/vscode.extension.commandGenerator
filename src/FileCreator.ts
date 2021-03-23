@@ -19,9 +19,8 @@ export class FileCreator {
       resource: resource,
       action: action
     }
-    var templates = [ ICommandTemplate, CommandRequestTemplate, CommandResponseTemplate ];
 
-    for (var template of templates) {
+    for (var template of [ ICommandTemplate, CommandRequestTemplate, CommandResponseTemplate, CommandTemplate ]) {
       let fileContent = ejs.render(template.template, params);
       const commandPath = this.getPath(template.getName(params.commandName), workspaceDetail, template.getFolder(workspace.name));
       workspaceEdit.createFile(commandPath);
