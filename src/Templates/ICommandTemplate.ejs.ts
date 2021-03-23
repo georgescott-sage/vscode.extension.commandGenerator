@@ -5,7 +5,7 @@ export abstract class ICommandTemplate {
         using SBC.Domain.Commands;
     
         /// <summary>
-        /// Interface defining the command to <%= action %> the <%= resource %>
+        /// Interface defining the command to <%= action %> <%= resource %>
         /// </summary>
         public interface I<%= commandName %> : ICustomCommand<<%= commandName %>Request, <%= commandName %>Response> {
         }
