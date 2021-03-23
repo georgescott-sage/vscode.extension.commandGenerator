@@ -19,7 +19,7 @@ export class FileCreator {
       resource: resource,
       action: action
     }
-    var templates = [ ICommandTemplate ];
+    var templates = [ ICommandTemplate, CommandRequestTemplate ];
 
     for (var template of templates) {
       let fileContent = ejs.render(template.template, params);
