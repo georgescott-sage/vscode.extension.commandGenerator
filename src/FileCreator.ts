@@ -7,10 +7,8 @@ import {CommandResponseTemplate} from './Templates/CommandResponseTemplate.ejs';
 import {CommandRequestTemplate} from './Templates/CommandRequestTemplate.ejs';
 
 const ejs = require('ejs');
-
 export class FileCreator {
   constructor() { }
-  private readonly extension = '.cs';
 
   async createFiles(workspaceDetail: Workspace, commandName: string, action: string, resource: string) {
     const workspaceEdit = new WorkspaceEdit();
@@ -31,7 +29,7 @@ export class FileCreator {
   }
 
   getPath(commandName: string, workspace: Workspace | undefined, commandFolderPath: string): Uri {
-    const filename = `${commandName}${this.extension}`;
+    const filename = `${commandName}.cs`;
     const folderPath = path.join(workspace?.root.fsPath ?? '/', commandFolderPath);
     return Uri.file(path.join(folderPath, filename));
   }
